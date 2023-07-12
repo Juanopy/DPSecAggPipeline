@@ -1,0 +1,49 @@
+/*
+ * Corona-Warn-Companion. An app that shows COVID-19 Exposure Notifications details.
+ * Copyright (C) 2020  Michael Huebler <corona-warn-companion@tosl.org> and other contributors.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+// reference: https://github.com/google/exposure-notifications-internals/blob/main/exposurenotification/src/main/proto/contact_record.proto
+//
+// compile with:
+// protoc --java_out=. ContactRecords.proto
+// (this generates org/tosl/coronawarncompanion/gmsreadout/ContactRecordsProtos.java)
+
+syntax = "proto2";
+
+package gmsreadout;
+
+option java_package = "com.example.database_test.gmsreadout";
+option java_outer_classname = "ContactRecordsProtos";
+
+message ScanRecord {
+  optional uint32 timestamp = 1;
+  optional bytes rssi_multiple_values = 2;
+  optional int32 rssi = 3 [deprecated = true];
+  repeated bytes aem_multiple_values = 6;
+  optional bytes aem = 4 [deprecated = true];
+  optional uint32 previous_scan_timestamp = 5;
+  optional double latitude = 7;  // latitude / longitude are not part of the GMS database, they are only
+  optional double longitude = 8; // added here because this protobuf format is used in all modes.
+  optional uint32 activity = 9;
+  optional string label = 10;
+  optional double prob = 11;
+  optional string vectors = 12;
+}
+
+message ContactRecords {
+  repeated ScanRecord record = 1;
+}
